@@ -35,8 +35,7 @@ app.get('/products', (req,res) =>{
 app.post('/registro', (req , res) => {
     const { name , pass } = req.body;
     var userRef = firebase.database().ref('Usuario');
-    userRef.set({
-        Nombre: name,
+    userRef.child(name).set({
         Contraseña: pass,
       });
       console.log('registro creado');
