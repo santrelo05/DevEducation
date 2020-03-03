@@ -25,7 +25,7 @@ function Registro(){
                 var nic = document.getElementById("inputNick");
                 nic.classList.remove("is-valid");
                 nic.classList.add("is-invalid");
-                alert("usuario ya en uso");
+                
             }else{
                 alert('registro creado');
             }
