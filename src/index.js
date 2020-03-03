@@ -33,16 +33,29 @@ app.get('/products', (req,res) =>{
 });
 
 app.post('/registro', (req , res) => {
-    const { name , pass } = req.body;
-    var userRef = firebase.database().ref('Usuario');
-    userRef.child(name).set({
-        Contraseña: pass,
-      });
-      console.log('registro creado');
-      res.json('Successfully created');
+    const { name , pass , last , correo , nick} = req.body;
+    var ref = firebase.database().ref('Usuario');
+        ref.once("value")
+            .then(function(snapshot) {
+                var a = snapshot.hasChild(nick);
+                if(a == true){
+                    res.json("nick");
+                }else{
+                    var userRef = firebase.database().ref('Usuario');
+                    userRef.child(nick).set({
+                        Contraseña: pass,
+                        Nombre: name,
+                        Correo:correo,
+                        Apellido: last,
+                      });
+                      console.log('registro creado');
+                      res.json('Successfully created');
+                }
+        });
 });
-
 
 app.listen(app.get('port'), () =>{
     console.log("Server on port ",app.get('port'));
 });
+
+
