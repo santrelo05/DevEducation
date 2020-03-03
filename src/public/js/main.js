@@ -1,3 +1,48 @@
+function Login(){
+    var user = document.getElementById("user").value;
+    var password = document.getElementById("password").value;
+    var use = document.getElementById("user");
+    var passwor = document.getElementById("password");
+    use.classList.remove("is-invalid");
+    passwor.classList.remove("is-invalid");
+
+    if(user == "" || password == ""){
+        if(user == ""){
+            use.classList.add("is-invalid");
+        }
+        if(password ==""){
+            passwor.classList.add("is-invalid");
+        }
+    }else{
+        var data = { user , password };
+        fetch('/login', {
+            method: 'POST', // or 'PUT'
+            body: JSON.stringify(data), // data can be `string` or {object}!
+            headers:{
+            'Content-Type': 'application/json'
+            }
+       
+         })
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(myJson) {
+          console.log(myJson);
+          if(myJson == "fail"){
+              alert("Usuario y/o Contraseña Incorrecta");
+          }else{
+              alert("bienvenido");
+          }
+          
+        })
+        .catch(error => {
+            console.error('Error:', error)
+        });
+
+    }
+
+}
+
 function Registro(){
     var name = document.getElementById("inputName").value;
     var pass = document.getElementById("inputPass").value;

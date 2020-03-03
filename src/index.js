@@ -54,6 +54,20 @@ app.post('/registro', (req , res) => {
         });
 });
 
+app.post('/login',( req , res) =>{
+    const {user , password} = req.body;
+   
+    var ref = firebase.database().ref('Usuario/'+user);
+    ref.once('value')
+       .then(function(snapshot) {
+        if(password === snapshot.child("Contraseña").val()){
+            res.json("successfully");
+        }else{
+            res.json("fail");
+        }
+        });
+});
+
 app.listen(app.get('port'), () =>{
     console.log("Server on port ",app.get('port'));
 });

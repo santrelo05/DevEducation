@@ -25,9 +25,28 @@
         </ul>
         <div id="myTabContent" class="tab-content">
             <div class="tab-pane fade active show" id="signIn">
+                <div class="jumbotron border-secondary">
+                    <form>
+                        <fieldset>
+                            <legend>Sign In<Inp></Inp></output></legend>
+                            <div class="form-group">
+                                <label>Nombre de usuario</label>
+                                <input type="text" class="form-control" id="user" placeholder="Enter Nickname">
+                                <div class="invalid-feedback">Llena el campo!</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Contraseña</label>
+                                <input type="password" class="form-control" id="password" placeholder="*****">
+                                <div class="invalid-feedback">Llena el campo!</div>
+                            </div>
 
-
-
+                            <div class="form-group">
+                                <button type="button" class="btn btnAzul btn-lg btn-block"
+                                    onclick="Login()">Iniciar Sesión</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
             </div>
             <div class="tab-pane fade" id="signUp">
                 <div class="jumbotron border-secondary">
