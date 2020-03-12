@@ -1,8 +1,9 @@
 function Login(){
-    var user = document.getElementById("user").value;
-    var password = document.getElementById("password").value;
     var use = document.getElementById("user");
     var passwor = document.getElementById("password");
+    var user = use.value;
+    var password = passwor.value;
+
     use.classList.remove("is-invalid");
     passwor.classList.remove("is-invalid");
 
@@ -30,7 +31,9 @@ function Login(){
           console.log(myJson);
           if(myJson == "fail"){
               alert("Usuario y/o Contraseña Incorrecta");
+            
           }else{
+              
               alert("bienvenido");
           }
           
@@ -49,35 +52,64 @@ function Registro(){
     var last = document.getElementById("inputLastName").value;
     var correo = document.getElementById("inputCorreo").value;
     var nick = document.getElementById("inputNick").value;
+    var radio = document.getElementsByName('customRadio');
 
     var valiDatos = validarDatosRegistro(name,pass,last,correo,nick);
     var data = { name,pass,last,correo,nick};
 
     if (valiDatos == true){
-        fetch('/registro', {
-            method: 'POST', // or 'PUT'
-            body: JSON.stringify(data), // data can be `string` or {object}!
-            headers:{
-            'Content-Type': 'application/json'
-            }
-       
-         })
-        .then(function(response) {
-            return response.json();
-        })
-        .then(function(myJson) {
-            if(myJson=="nick"){
-                var nic = document.getElementById("inputNick");
-                nic.classList.remove("is-valid");
-                nic.classList.add("is-invalid");
-                
-            }else{
-                alert('registro creado');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error)
-        });
+        if(radio[0].checked){
+            fetch('/registro',{
+                method: 'POST', // or 'PUT'
+                body: JSON.stringify(data), // data can be `string` or {object}!
+                headers:{
+                'Content-Type': 'application/json'
+                }
+        
+            })
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(myJson) {
+                if(myJson=="nick"){
+                    var nic = document.getElementById("inputNick");
+                    nic.classList.remove("is-valid");
+                    nic.classList.add("is-invalid");
+                    
+                }else{
+                    alert('registro creado');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error)
+            });
+        }
+        else{
+            fetch('/registroProfe',{
+                method: 'POST', // or 'PUT'
+                body: JSON.stringify(data), // data can be `string` or {object}!
+                headers:{
+                'Content-Type': 'application/json'
+                }
+        
+            })
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(myJson) {
+                if(myJson=="nick"){
+                    var nic = document.getElementById("inputNick");
+                    nic.classList.remove("is-valid");
+                    nic.classList.add("is-invalid");
+                    
+                }else{
+                    alert('registro creado');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error)
+            });
+        }
         
     }
 }
