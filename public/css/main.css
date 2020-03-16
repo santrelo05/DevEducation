@@ -1,0 +1,8 @@
+.btnAzul{
+    background-color: #0f4c75;
+    color: white;
+}
+.btnAzul:hover{
+    background-color: #3282b8;
+    color: white;
+}
