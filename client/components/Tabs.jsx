@@ -21,6 +21,7 @@ class Tabs extends Component {
         }
         this.handleInput = this.handleInput.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.loguear = this.loguear.bind(this);
     }
 
     handleInput(e) {
@@ -42,6 +43,14 @@ class Tabs extends Component {
 
     }
 
+    loguear(e){
+        e.preventDefault();
+        this.setState(validarCampos(this.state));
+
+        if(this.state.nickname != '' && this.state.password != ''){
+            this.props.loginReq(this.state);
+        }
+    }
  
 
     render() {
@@ -49,23 +58,22 @@ class Tabs extends Component {
             return (
                 <div className="tab-pane fade active show" id="signIn">
                     <div className="jumbotron border-secondary">
-                        <form>
+                        <form onSubmit={this.loguear}>
                             <fieldset>
                                 <legend>Sign In</legend>
                                 <div className="form-group">
                                     <label>Nombre de usuario</label>
-                                    <input type="text" className="form-control" id="user" placeholder="Enter Nickname" />
+                                    <input type="text" className="form-control" name="nickname" placeholder="Enter Nickname"className={this.state.efenickname} onChange={this.handleInput}/>
                                     <div className="invalid-feedback">Llena el campo!</div>
                                 </div>
                                 <div className="form-group">
                                     <label>Contraseña</label>
-                                    <input type="password" className="form-control" id="password" placeholder="*****" />
+                                    <input type="password" className="form-control" name="password" placeholder="*****" className={this.state.efepassword} onChange={this.handleInput}/>
                                     <div className="invalid-feedback">Llena el campo!</div>
                                 </div>
 
                                 <div className="form-group">
-                                    <button type="button" className="btn btnAzul btn-lg btn-block"
-                                        onclick="Login()">Iniciar Sesión</button>
+                                    <button type="submit" className="btn btnAzul btn-lg btn-block" >Iniciar Sesión</button>
                                 </div>
                             </fieldset>
                         </form>

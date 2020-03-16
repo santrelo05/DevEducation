@@ -24,16 +24,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //middlewares
 app.use(morgan('dev'));
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 //routes
-app.get('/home', (req,res) =>{
+app.get('/home', (req, res) => {
     res.sendFile(path.resolve(__dirname + '/public/index.html'));
 });
 
-app.post('/registro', (req,res) => {
-    const { name, password, lastname, correo, nickname , radio } = req.body;
+app.post('/registro', (req, res) => {
+    const { name, password, lastname, correo, nickname, radio } = req.body;
     var ref = firebase.database().ref('Usuario');
     ref.once("value")
         .then(function (snapshot) {
@@ -48,7 +48,7 @@ app.post('/registro', (req,res) => {
                         if (a == true) {
                             res.status(500).json("nick");
                         }
-                        else{
+                        else {
                             var ref2 = firebase.database().ref('Profesor');
                             ref2.once("value")
                                 .then(function (snapshot) {
@@ -56,7 +56,7 @@ app.post('/registro', (req,res) => {
                                     if (a == true) {
                                         res.status(500).json("nick");
                                     } else {
-                                        if(radio === 'Estudiante'){
+                                        if (radio === 'Estudiante') {
                                             var ref3 = firebase.database().ref('Usuario');
                                             ref3.child(nickname).set({
                                                 Contraseña: password,
@@ -67,7 +67,7 @@ app.post('/registro', (req,res) => {
                                             console.log('registro creado');
                                             res.status(200).json('Successfully created');
                                         }
-                                        else{
+                                        else {
                                             var ref3 = firebase.database().ref('filtroProfe');
                                             ref3.child(nickname).set({
                                                 Contraseña: password,
@@ -87,7 +87,29 @@ app.post('/registro', (req,res) => {
 
 });
 
+app.post('/login', (req, res) => {
+    const { password, nickname } = req.body;
+    var ref = firebase.database().ref('Usuario/' + nickname);
+    ref.once('value')
+        .then(function (snapshot) {
+            if (password === snapshot.child("Contraseña").val()) {
+                res.status(201).json('eres estudiante');
+            } else {
+                var ref1 = firebase.database().ref('Profesor/' + nickname);
+                ref1.once('value')
+                    .then(function (snapshot) {
+                        if (password === snapshot.child("Contraseña").val()) {
+                            res.status(202).json('eres profesor');
+                        } else {
+                            res.status(203).json('usuario y contraseña incorrectos');
+                        }
+                    });
+            }
+        });
 
-app.listen(app.get('port'), () =>{
-    console.log("Server on port ",app.get('port'));
+});
+
+
+app.listen(app.get('port'), () => {
+    console.log("Server on port ", app.get('port'));
 });

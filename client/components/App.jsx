@@ -52,6 +52,31 @@ class App extends Component {
         });
 
     }
+    loginReq(datta){
+        var data = {
+            nickname: datta.nickname,
+            password: datta.password
+        };
+        fetch('/login',{
+            method: 'POST', // or 'PUT'
+            body: JSON.stringify(data), // data can be `string` or {object}!
+            headers:{
+            'Content-Type': 'application/json'
+            }
+    
+        })
+        .then(function(response) {
+            console.log(response.status);
+            return response.json();
+        })
+        .then(function(myJson) {
+          console.log(myJson);
+        })
+        .catch(error => {
+            console.error('Error:', error)
+        });
+
+    }
 
     render() {
         if(this.state.tab){
@@ -66,7 +91,7 @@ class App extends Component {
                         </li>
                     </ul>
                     <div id="myTabContent" class="tab-content">
-                    <Tabs onAddTodo={this.handleAddTodo} message={this.state.tab}/>
+                    <Tabs loginReq={this.loginReq} message={this.state.tab}/>
                     </div>
     
                 </div>
