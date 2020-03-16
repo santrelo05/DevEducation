@@ -1,0 +1,37 @@
+{
+  "name": "dev-education",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "webpack": "./node_modules/.bin/webpack -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/santrelo05/DevEducation.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/santrelo05/DevEducation/issues"
+  },
+  "homepage": "https://github.com/santrelo05/DevEducation#readme",
+  "dependencies": {
+    "@babel/core": "^7.8.7",
+    "@babel/preset-react": "^7.8.3",
+    "babel-loader": "^8.0.6",
+    "express": "^4.17.1",
+    "firebase": "^7.11.0",
+    "morgan": "^1.9.1",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0",
+    "react-tabs": "^3.1.0",
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
