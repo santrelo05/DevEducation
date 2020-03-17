@@ -39,14 +39,30 @@ app.post('/registro', (req, res) => {
         .then(function (snapshot) {
             var a = snapshot.hasChild(nickname);
             if (a == true) {
-                res.status(500).json("nick");
+                var myJson = {
+                    nickname :'',
+                    name : '',
+                    lastname : '',
+                    correo : '',
+                    password :'',
+                    stage:'0'
+                }
+                res.status(204).json(myJson);
             } else {
                 var ref1 = firebase.database().ref('filtroProfe');
                 ref1.once("value")
                     .then(function (snapshot) {
                         var a = snapshot.hasChild(nickname);
                         if (a == true) {
-                            res.status(500).json("nick");
+                            var myJson = {
+                                nickname : '',
+                                name : '',
+                                lastname : '',
+                                correo : '',
+                                password :'',
+                                stage:'0'
+                            }
+                            res.status(204).json(myJson);
                         }
                         else {
                             var ref2 = firebase.database().ref('Profesor');
@@ -64,8 +80,16 @@ app.post('/registro', (req, res) => {
                                                 Correo: correo,
                                                 Apellido: lastname,
                                             });
+                                            var myJson = {
+                                                nickname,
+                                                name,
+                                                lastname,
+                                                correo,
+                                                password,
+                                                stage:'1'
+                                            }
                                             console.log('registro creado');
-                                            res.status(200).json('Successfully created');
+                                            res.status(201).json(myJson);
                                         }
                                         else {
                                             var ref3 = firebase.database().ref('filtroProfe');
@@ -75,8 +99,16 @@ app.post('/registro', (req, res) => {
                                                 Correo: correo,
                                                 Apellido: lastname,
                                             });
+                                            var myJson = {
+                                                nickname,
+                                                name,
+                                                lastname,
+                                                correo,
+                                                password,
+                                                stage:'0'
+                                            }
                                             console.log('registro creado');
-                                            res.status(200).json('Successfully created');
+                                            res.status(200).json(myJson);
                                         }
                                     }
                                 });
@@ -93,15 +125,32 @@ app.post('/login', (req, res) => {
     ref.once('value')
         .then(function (snapshot) {
             if (password === snapshot.child("Contraseña").val()) {
-                res.status(201).json('eres estudiante');
+                    var myJson = {
+                        nickname,
+                        name: snapshot.child("Nombre").val(),
+                        lastname: snapshot.child("Apellido").val(),
+                        correo: snapshot.child("Correo").val(),
+                        password: snapshot.child("Contraseña").val(),
+                        stage: '1'
+                    }
+                    res.status(201).json(myJson);
+                
             } else {
                 var ref1 = firebase.database().ref('Profesor/' + nickname);
                 ref1.once('value')
                     .then(function (snapshot) {
                         if (password === snapshot.child("Contraseña").val()) {
-                            res.status(202).json('eres profesor');
+                            var myJson = {
+                                nickname,
+                                name: snapshot.child("Nombre").val(),
+                                lastname: snapshot.child("Apellido").val(),
+                                correo: snapshot.child("Correo").val(),
+                                password: snapshot.child("Contraseña").val(),
+                                stage: '2'
+                            }
+                            res.status(201).json(myJson);
                         } else {
-                            res.status(203).json('usuario y contraseña incorrectos');
+                            res.status(201).json('0');
                         }
                     });
             }
