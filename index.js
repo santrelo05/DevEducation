@@ -159,6 +159,23 @@ app.post('/login', (req, res) => {
 });
 
 
+app.post('/crearGrupo', (req, res) => {
+    const { nickname , name , lastname , nameclass , description, correo } = req.body;
+    var ref = firebase.database().ref('Grupos/');
+    var newPostRef = ref.push();
+    newPostRef.set({
+        nickname,
+        name,
+        lastname,
+        nameclass,
+        description,
+        correo
+    });
+    console.log(newPostRef);
+    res.status(201).json("grupo creado");
+});
+
+
 app.listen(app.get('port'), () => {
     console.log("Server on port ", app.get('port'));
 });

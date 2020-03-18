@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Tabs from './Tabs.jsx';
+import Profesor from './Profesor.jsx';
 
 class App extends Component {
     constructor() {
@@ -10,6 +11,7 @@ class App extends Component {
         };
         this.loginReq = this.loginReq.bind(this);
         this.handleAddTodo = this.handleAddTodo.bind(this);
+        this.crearReq = this.crearReq.bind(this);
     }
 
     handleAddTodo(todo) {
@@ -90,9 +92,37 @@ class App extends Component {
         console.log(this.state);
 
     }
-    holaa() {
-        console.log('estas dentro de hola');
+    crearReq(datta){
+       var data = {
+            nickname: this.state.nickname,
+            name: this.state.name,
+            lastname: this.state.lastname,
+            nameclass: datta.nameclass,
+            description: datta.description,
+            correo: this.state.correo 
+       }
+       fetch('/crearGrupo',{
+        method: 'POST', // or 'PUT'
+        body: JSON.stringify(data), // data can be `string` or {object}!
+        headers:{
+        'Content-Type': 'application/json'
+        }
+
+    })
+    .then(function(response) {
+        console.log(response.status)
+        return response.json();
+    })
+    .then(function(myJson) {
+        console.log(myJson);
+        alert(myJson);
+    })
+    .catch(error => {
+        console.error('Error:', error)
+    });
+       
     }
+   
 
     render() {
         console.log(this.state);
@@ -143,7 +173,7 @@ class App extends Component {
         }
         if (this.state.stage === '2') {
             return (
-                <h1>Profee</h1>
+                <Profesor crearReq={this.crearReq}/>
             )
         }
     }
