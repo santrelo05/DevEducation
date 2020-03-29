@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import NavProfesor from './NavProfesor.jsx';
 import CrearGrupo from './CrearGrupo.jsx';
-
+import MiClalsesP from './MisClasesP.jsx';
+import MisClasesP from './MisClasesP.jsx';
 
 class Profesor extends Component {
     constructor() {
@@ -29,6 +30,7 @@ class Profesor extends Component {
             return(
                 <div>
                     <NavProfesor onchangStage={this.onchangStage}/>
+                    <MisClasesP clasesP={this.props.datos}/>
                 </div>
             )
         }

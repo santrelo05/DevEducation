@@ -83,6 +83,7 @@ class App extends Component {
                 lastname: myJson.lastname,
                 correo: myJson.correo,
                 password: myJson.password,
+                clases: myJson.clases,
                 stage: myJson.stage
             }))
             .catch(error => {
@@ -173,7 +174,7 @@ class App extends Component {
         }
         if (this.state.stage === '2') {
             return (
-                <Profesor crearReq={this.crearReq}/>
+                <Profesor datos={this.state.clases} crearReq={this.crearReq}/>
             )
         }
     }

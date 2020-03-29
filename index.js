@@ -146,6 +146,7 @@ app.post('/login', (req, res) => {
                                 lastname: snapshot.child("Apellido").val(),
                                 correo: snapshot.child("Correo").val(),
                                 password: snapshot.child("Contraseña").val(),
+                                clases: snapshot.child("Clases").val(),
                                 stage: '2'
                             }
                             res.status(201).json(myJson);
@@ -171,8 +172,62 @@ app.post('/crearGrupo', (req, res) => {
         description,
         correo
     });
-    console.log(newPostRef);
+
+    newPostRef.once('value')
+       .then(function(snapshot) {
+        var key = snapshot.key;
+        var ref1 = firebase.database().ref('Profesor/'+nickname);
+            ref1.once('value')
+            .then(function(snapshot){
+                var clases = snapshot.child('Clases').val();
+                if(clases === null){
+                    clases = [key];
+                }else{
+                    clases.push(key);
+                }
+                var ref2 = firebase.database().ref('Profesor/'+nickname);
+                ref2.update({
+                    Clases: clases
+                });
+
+            });
+        });
+
     res.status(201).json("grupo creado");
+});
+
+app.post('/infoClases', (req, res) => {
+    
+    function getDatos(claseid){
+        return new Promise(function(resolve,reject){
+            var ref = firebase.database().ref('Grupos/'+claseid);
+            ref.once('value')
+            .then(function(snapshot){
+            
+                var newjson = 
+                {id: claseid,
+                correo: snapshot.child("correo").val(),
+                description: snapshot.child("description").val(),
+                lastname: snapshot.child("lastname").val(),
+                name: snapshot.child("name").val(),
+                nameclass: snapshot.child("nameclass").val(),
+                nick: snapshot.child("nick").val(),
+            }
+            resolve(newjson);
+         });
+         
+        })
+    }    
+    async function f1(){
+        var ss=[];
+    
+        for(var i = 0 ; i< req.body.length ; i++){
+           ss[i] = await getDatos(req.body[i]);    
+        }
+        console.log(ss);
+        res.status(200).json(ss);
+    }
+        f1();
 });
 
 
