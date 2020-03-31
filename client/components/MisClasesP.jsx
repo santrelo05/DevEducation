@@ -7,9 +7,20 @@ class MisClasesP extends Component {
         };
         this.buscarDatos = this.buscarDatos.bind(this);
     }
+    
+    selectedClass(index){
+        var clase;
+         this.state.clases.map((e, i) => {
+            if(index === i ){
+                clase = e;
+            }
+          });
+        
+        this.props.selectedAclass(clase);
+
+    }
 
     buscarDatos() {
-        
         fetch('/infoClases', {
             method: 'POST', // or 'PUT'
             body: JSON.stringify(this.props.clasesP), // data can be `string` or {object}!
@@ -29,36 +40,51 @@ class MisClasesP extends Component {
             .catch(error => {
                 console.error('Error:', error)
             });
-
     }
 
     render() {
+        console.log('aquirr');
+        console.log(this.state);
         if (this.state.stage === '0') {
             this.buscarDatos();
-            return (<h1>buscando...</h1>);
+            return (<div className="container">
+                <br/>
+                <h1>buscando...</h1>
+            </div>);
         } else {
-            const clases =  this.state.clases.map((clase, i) => {
+            if (this.state.clases === "not found") {
                 return (
-                    <div class="list-group mt-2">
-                        <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">{clase.nameclass}</h5>
-                                <small>3 days ago</small>
-                            </div>
-                            <p class="mb-1">{clase.description}</p>
-                            <small>Profesor: {clase.name} {clase.lastname}</small><br/>
-                            <small>Correo: {clase.correo} </small>
-                        </a>
+                    <div className="container">
+                        <br/>
+                        <h1>No tienes clases aun!, puedes crearla ahora mismo !</h1>
+                    </div>)
+            } else {
+
+
+                const clases = this.state.clases.map((clase, i) => {
+                    return (
+                        <div className="list-group mt-2">
+                            <a href='#' className="list-group-item list-group-item-action flex-column align-items-start active" onClick={this.selectedClass.bind(this , i)}>
+                                <div className="d-flex w-100 justify-content-between">
+                                    <h5 className="mb-1">{clase.nameclass}</h5>
+                                    <small>3 days ago</small>
+                                </div>
+                                <p className="mb-1">{clase.description}</p>
+                                <small>Profesor: {clase.name} {clase.lastname}</small><br />
+                                <small>Correo: {clase.correo} </small>
+                            </a>
+                        </div>
+                    )
+
+                });
+
+                return (
+                    <div className="container">
+                        <br />
+                        {clases}
                     </div>
                 )
-
-            });
-            return (
-                <div className="container">
-                    <br />
-                    {clases}
-                </div>
-            )
+            }
         }
     }
 

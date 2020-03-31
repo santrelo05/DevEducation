@@ -197,7 +197,7 @@ app.post('/crearGrupo', (req, res) => {
 });
 
 app.post('/infoClases', (req, res) => {
-    
+    const { nickname } = req.body;
     function getDatos(claseid){
         return new Promise(function(resolve,reject){
             var ref = firebase.database().ref('Grupos/'+claseid);
@@ -211,23 +211,37 @@ app.post('/infoClases', (req, res) => {
                 lastname: snapshot.child("lastname").val(),
                 name: snapshot.child("name").val(),
                 nameclass: snapshot.child("nameclass").val(),
-                nick: snapshot.child("nick").val(),
+                nickname: snapshot.child("nickname").val(),
             }
             resolve(newjson);
          });
          
         })
     }    
-    async function f1(){
+
+    async function f1(classarr){
         var ss=[];
-    
-        for(var i = 0 ; i< req.body.length ; i++){
-           ss[i] = await getDatos(req.body[i]);    
+        if(classarr === null){
+            ss="not found";
+            res.status(200).json(ss);
+        }else{
+
+        
+        for(var i = 0 ; i< classarr.length ; i++){
+           ss[i] = await getDatos(classarr[i]);    
         }
-        console.log(ss);
+        
         res.status(200).json(ss);
+        }
     }
-        f1();
+
+    var ref1 = firebase.database().ref('Profesor/'+nickname);
+   
+    ref1.once('value')
+       .then(function(snapshot) {
+        f1(snapshot.child("Clases").val());
+    });
+   
 });
 
 

@@ -174,7 +174,7 @@ class App extends Component {
         }
         if (this.state.stage === '2') {
             return (
-                <Profesor datos={this.state.clases} crearReq={this.crearReq}/>
+                <Profesor datos={this.state} crearReq={this.crearReq}/>
             )
         }
     }
