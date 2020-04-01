@@ -60,7 +60,7 @@ class MisClasesP extends Component {
                     </div>)
             } else {
 
-
+                
                 const clases = this.state.clases.map((clase, i) => {
                     return (
                         <div className="list-group mt-2">
