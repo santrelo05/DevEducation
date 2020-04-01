@@ -7,6 +7,7 @@ class CrearActividad extends Component {
         this.state = {
             ciclo: 1
         }
+        this.removeInput=this.removeInput.bind(this);
         this.addInput = this.addInput.bind(this);
         this.handleInput = this.handleInput.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -14,9 +15,19 @@ class CrearActividad extends Component {
     
     addInput(e){
         e.preventDefault();
-        this.setState({
-            ciclo: this.state.ciclo+1
-        })
+        if(this.state.ciclo < 10){
+            this.setState({
+                ciclo: this.state.ciclo+1
+            })
+        }
+    }
+    removeInput(e){
+        e.preventDefault();
+        if(this.state.ciclo > 1){
+            this.setState({
+                ciclo: this.state.ciclo-1
+            })
+        }
     }
 
     handleInput(e) {
@@ -28,7 +39,7 @@ class CrearActividad extends Component {
 
     handleSubmit(e){
         e.preventDefault();
-        console.log(this.state);
+        this.props.dataActividad(this.state);
     }
 
     render() {
@@ -83,10 +94,19 @@ class CrearActividad extends Component {
                               
                                 
                                 {inputGenerator}
-                                <button className="btn btnAzul btn-lg btn-block" onClick={this.addInput}> + </button>
+                                <div className="container">
+                                    <div className="row">
+                                        <div className="col-sm">
+                                            <button className="btn btn-success btn-lg btn-block" onClick={this.addInput}> +</button>
+                                        </div>
+                                        <div className="col-sm">
+                                            <button className="btn btn-danger btn-lg btn-block" onClick={this.removeInput}> - </button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
-
+                            <hr className="bg-info"></hr>
                             <div className="form-group">
                                 <button type="submit" className="btn btnAzul btn-lg btn-block" >Crear Acitvidad</button>
                             </div>

@@ -15,6 +15,7 @@ class Profesor extends Component {
         this.crearReq = this.crearReq.bind(this);
         this.selectedAclass= this.selectedAclass.bind(this);
         this.crearTareareq = this.crearTareareq.bind(this);
+        this.dataActividad = this.dataActividad.bind(this);
     }
     onchangStage(data){
         this.setState({
@@ -46,7 +47,27 @@ class Profesor extends Component {
             stage: '3'
         })
     }
+    dataActividad(data){
+        data.id = this.state.id;
+        fetch('/crearActividad', {
+            method: 'POST', // or 'PUT'
+            body: JSON.stringify(data), // data can be `string` or {object}!
+            headers: {
+                'Content-Type': 'application/json'
+            }
 
+        })
+            .then(function (response) {
+                console.log(response.status);
+                return response.json();
+            })
+            .then(myJson => this.setState({
+                stage: '0'
+            }))
+            .catch(error => {
+                console.error('Error:', error)
+            });
+    }
 
     render(){
         if(this.state.stage === '0'){
@@ -81,7 +102,7 @@ class Profesor extends Component {
                 <div>
                     <NavProfesor onchangStage={this.onchangStage}/>
                     <br/>
-                    <CrearActividad></CrearActividad>
+                    <CrearActividad dataActividad={this.dataActividad}></CrearActividad>
                 </div>
             )
         }

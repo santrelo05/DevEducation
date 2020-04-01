@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Tabs from './Tabs.jsx';
 import Profesor from './Profesor.jsx';
+import Estudiante from './Estudiante.jsx';
 
 class App extends Component {
     constructor() {
@@ -151,6 +152,9 @@ class App extends Component {
             }
             else {
                 return (
+                    <div>
+                        <br></br>
+                        <br></br>
                     <div className="container">
                         <ul className="nav nav-tabs">
                             <li className="nav-item">
@@ -163,13 +167,14 @@ class App extends Component {
                         <Tabs onAddTodo={this.handleAddTodo} message={this.state.tab} />
 
                     </div>
+                    </div>
                 )
             }
 
         }
         if (this.state.stage === '1') {
             return (
-                <h1>Alumnooo</h1>
+                <Estudiante></Estudiante>
             )
         }
         if (this.state.stage === '2') {

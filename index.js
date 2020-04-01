@@ -244,6 +244,87 @@ app.post('/infoClases', (req, res) => {
    
 });
 
+app.post('/crearActividad', (req, res) => {
+    const {nombreActividad , Problema, Ejemplo, ciclo, id} = req.body;
+    const {input0,input1,input2,input3,input4,input5,input6,input7,input8,input9} = req.body;
+    const {output0,output1,output2,output3,output4,output5,output6,output7,output8,output9} = req.body;
+    var input=[];
+    var output=[];
+    var aux=[];
+    var aux1=[];
+    aux.push(input0);aux.push(input1);aux.push(input2);aux.push(input3);aux.push(input4);aux.push(input5);aux.push(input6);aux.push(input7);aux.push(input8);aux.push(input9);
+    aux1.push(output0);aux1.push(output1);aux1.push(output2);aux1.push(output3);aux1.push(output4);aux1.push(output5);aux1.push(output6);aux1.push(output7);aux1.push(output8);aux1.push(output9);
+    for(var i = 0; i < 10 ; i++){
+        if(aux[i] !== undefined){
+            input.push(aux[i]);
+        }
+        if(aux1[i] !== undefined){
+            output.push(aux1[i]);
+        }       
+
+    }
+    
+    var ref = firebase.database().ref('Grupos/'+id+'/Tareas');
+    var newPostRef = ref.push();
+    newPostRef.set({
+        NombreActividad : nombreActividad,
+        Problema,
+        Ejemplo,
+        Ciclo:ciclo,
+        input,
+        output
+    });
+ 
+    
+
+res.status(200).json(req.body);
+});
+
+app.post('/compilar', (req, res) => {
+    var code = {
+        source_code: req.body.code, 
+        language_id: req.body.language_id,
+        stdin: "casa"
+    }
+    
+    
+    async function compilar() {
+        // Compilar
+        let response = await fetch('https://api.judge0.com/submissions?base64_encoded=false&wait=false', {
+            method: 'post',
+            body: JSON.stringify(code),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        let json;
+        if (response.ok) {
+            json = await response.json();
+        } else {
+            alert("HTTP-Error: " + response.status);
+        }
+    
+        // ver el resultado
+        let r;
+        while (true) {
+            let result = await fetch(`https://api.judge0.com/submissions/${json.token}?base64_encoded=false&wait=false`);
+            if (result.ok) {
+                r = await result.json();
+            } else {
+                alert("HTTP-Error: " + result.status);
+            }
+            if (r.status.id != 1 && r.status.id != 2) {
+                break;
+            }
+        }
+        console.log(r);
+        res.status(200).json(r);
+        
+    }
+    
+    compilar();
+});
+
 
 app.listen(app.get('port'), () => {
     console.log("Server on port ", app.get('port'));
