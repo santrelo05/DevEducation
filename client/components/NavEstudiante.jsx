@@ -4,7 +4,25 @@ class NavEstudiante extends Component {
     constructor() {
         super();
         this.state = {
+            misclases: 'nav-item active',
+            buscarclase: 'nav-item'
         }
+    }
+
+    changeStage(e){
+        if (e === '0') {
+            this.setState({
+                misclases: 'nav-item active',
+                buscarclase: 'nav-item'
+            });
+        }
+        if (e === '1') {
+            this.setState({
+                misclases: 'nav-item',
+                buscarclase: 'nav-item active'
+            })
+        }
+        this.props.onchangStage(e);
     }
     render (){
         return (
@@ -16,11 +34,11 @@ class NavEstudiante extends Component {
 
                 <div class="collapse navbar-collapse" id="navbarColor01">
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" >Mis Clases</a>
+                        <li className={this.state.misclases} onClick={this.changeStage.bind(this, '0')}>
+                            <a class="nav-link">Mis Clases</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" >Buscar Clase</a>
+                        <li className={this.state.buscarclase} onClick={this.changeStage.bind(this, '1')}>
+                            <a class="nav-link">Buscar Clase</a>
                         </li>
                         
                     </ul>

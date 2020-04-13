@@ -174,7 +174,7 @@ class App extends Component {
         }
         if (this.state.stage === '1') {
             return (
-                <Estudiante></Estudiante>
+                <Estudiante datos={this.state}></Estudiante>
             )
         }
         if (this.state.stage === '2') {

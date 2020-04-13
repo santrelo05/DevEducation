@@ -40,12 +40,12 @@ app.post('/registro', (req, res) => {
             var a = snapshot.hasChild(nickname);
             if (a == true) {
                 var myJson = {
-                    nickname :'',
-                    name : '',
-                    lastname : '',
-                    correo : '',
-                    password :'',
-                    stage:'0'
+                    nickname: '',
+                    name: '',
+                    lastname: '',
+                    correo: '',
+                    password: '',
+                    stage: '0'
                 }
                 res.status(204).json(myJson);
             } else {
@@ -55,12 +55,12 @@ app.post('/registro', (req, res) => {
                         var a = snapshot.hasChild(nickname);
                         if (a == true) {
                             var myJson = {
-                                nickname : '',
-                                name : '',
-                                lastname : '',
-                                correo : '',
-                                password :'',
-                                stage:'0'
+                                nickname: '',
+                                name: '',
+                                lastname: '',
+                                correo: '',
+                                password: '',
+                                stage: '0'
                             }
                             res.status(204).json(myJson);
                         }
@@ -86,7 +86,7 @@ app.post('/registro', (req, res) => {
                                                 lastname,
                                                 correo,
                                                 password,
-                                                stage:'1'
+                                                stage: '1'
                                             }
                                             console.log('registro creado');
                                             res.status(201).json(myJson);
@@ -105,7 +105,7 @@ app.post('/registro', (req, res) => {
                                                 lastname,
                                                 correo,
                                                 password,
-                                                stage:'0'
+                                                stage: '0'
                                             }
                                             console.log('registro creado');
                                             res.status(200).json(myJson);
@@ -125,16 +125,17 @@ app.post('/login', (req, res) => {
     ref.once('value')
         .then(function (snapshot) {
             if (password === snapshot.child("Contraseña").val()) {
-                    var myJson = {
-                        nickname,
-                        name: snapshot.child("Nombre").val(),
-                        lastname: snapshot.child("Apellido").val(),
-                        correo: snapshot.child("Correo").val(),
-                        password: snapshot.child("Contraseña").val(),
-                        stage: '1'
-                    }
-                    res.status(201).json(myJson);
-                
+                var myJson = {
+                    nickname,
+                    name: snapshot.child("Nombre").val(),
+                    lastname: snapshot.child("Apellido").val(),
+                    correo: snapshot.child("Correo").val(),
+                    password: snapshot.child("Contraseña").val(),
+                    clases : snapshot.child("Clases").val(),
+                    stage: '1'
+                }
+                res.status(201).json(myJson);
+
             } else {
                 var ref1 = firebase.database().ref('Profesor/' + nickname);
                 ref1.once('value')
@@ -161,7 +162,7 @@ app.post('/login', (req, res) => {
 
 
 app.post('/crearGrupo', (req, res) => {
-    const { nickname , name , lastname , nameclass , description, correo } = req.body;
+    const { nickname, name, lastname, nameclass, description, correo } = req.body;
     var ref = firebase.database().ref('Grupos/');
     var newPostRef = ref.push();
     newPostRef.set({
@@ -174,23 +175,23 @@ app.post('/crearGrupo', (req, res) => {
     });
 
     newPostRef.once('value')
-       .then(function(snapshot) {
-        var key = snapshot.key;
-        var ref1 = firebase.database().ref('Profesor/'+nickname);
+        .then(function (snapshot) {
+            var key = snapshot.key;
+            var ref1 = firebase.database().ref('Profesor/' + nickname);
             ref1.once('value')
-            .then(function(snapshot){
-                var clases = snapshot.child('Clases').val();
-                if(clases === null){
-                    clases = [key];
-                }else{
-                    clases.push(key);
-                }
-                var ref2 = firebase.database().ref('Profesor/'+nickname);
-                ref2.update({
-                    Clases: clases
-                });
+                .then(function (snapshot) {
+                    var clases = snapshot.child('Clases').val();
+                    if (clases === null) {
+                        clases = [key];
+                    } else {
+                        clases.push(key);
+                    }
+                    var ref2 = firebase.database().ref('Profesor/' + nickname);
+                    ref2.update({
+                        Clases: clases
+                    });
 
-            });
+                });
         });
 
     res.status(201).json("grupo creado");
@@ -198,96 +199,124 @@ app.post('/crearGrupo', (req, res) => {
 
 app.post('/infoClases', (req, res) => {
     const { nickname } = req.body;
-    function getDatos(claseid){
-        return new Promise(function(resolve,reject){
-            var ref = firebase.database().ref('Grupos/'+claseid);
+    function getDatos(claseid) {
+        return new Promise(function (resolve, reject) {
+            var ref = firebase.database().ref('Grupos/' + claseid);
             ref.once('value')
-            .then(function(snapshot){
-            
-                var newjson = 
-                {id: claseid,
-                correo: snapshot.child("correo").val(),
-                description: snapshot.child("description").val(),
-                lastname: snapshot.child("lastname").val(),
-                name: snapshot.child("name").val(),
-                nameclass: snapshot.child("nameclass").val(),
-                nickname: snapshot.child("nickname").val(),
-            }
-            resolve(newjson);
-         });
-         
+                .then(function (snapshot) {
+
+                    var newjson =
+                    {
+                        id: claseid,
+                        correo: snapshot.child("correo").val(),
+                        description: snapshot.child("description").val(),
+                        lastname: snapshot.child("lastname").val(),
+                        name: snapshot.child("name").val(),
+                        nameclass: snapshot.child("nameclass").val(),
+                        nickname: snapshot.child("nickname").val(),
+                    }
+                    resolve(newjson);
+                });
+
         })
-    }    
+    }
 
-    async function f1(classarr){
-        var ss=[];
-        if(classarr === null){
-            ss="not found";
+    async function f1(classarr) {
+        var ss = [];
+        if (classarr === null) {
+            ss = "not found";
             res.status(200).json(ss);
-        }else{
+        } else {
 
-        
-        for(var i = 0 ; i< classarr.length ; i++){
-           ss[i] = await getDatos(classarr[i]);    
-        }
-        
-        res.status(200).json(ss);
+
+            for (var i = 0; i < classarr.length; i++) {
+                ss[i] = await getDatos(classarr[i]);
+            }
+
+            res.status(200).json(ss);
         }
     }
 
-    var ref1 = firebase.database().ref('Profesor/'+nickname);
-   
+    var ref1 = firebase.database().ref('Profesor/' + nickname);
+
     ref1.once('value')
-       .then(function(snapshot) {
-        f1(snapshot.child("Clases").val());
-    });
-   
+        .then(function (snapshot) {
+            f1(snapshot.child("Clases").val());
+        });
+
 });
 
 app.post('/crearActividad', (req, res) => {
-    const {nombreActividad , Problema, Ejemplo, ciclo, id} = req.body;
-    const {input0,input1,input2,input3,input4,input5,input6,input7,input8,input9} = req.body;
-    const {output0,output1,output2,output3,output4,output5,output6,output7,output8,output9} = req.body;
-    var input=[];
-    var output=[];
-    var aux=[];
-    var aux1=[];
-    aux.push(input0);aux.push(input1);aux.push(input2);aux.push(input3);aux.push(input4);aux.push(input5);aux.push(input6);aux.push(input7);aux.push(input8);aux.push(input9);
-    aux1.push(output0);aux1.push(output1);aux1.push(output2);aux1.push(output3);aux1.push(output4);aux1.push(output5);aux1.push(output6);aux1.push(output7);aux1.push(output8);aux1.push(output9);
-    for(var i = 0; i < 10 ; i++){
-        if(aux[i] !== undefined){
+    const { nombreActividad, Problema, Ejemplo, ciclo, id } = req.body;
+    const { input0, input1, input2, input3, input4, input5, input6, input7, input8, input9 } = req.body;
+    const { output0, output1, output2, output3, output4, output5, output6, output7, output8, output9 } = req.body;
+    var input = [];
+    var output = [];
+    var aux = [];
+    var aux1 = [];
+    aux.push(input0); aux.push(input1); aux.push(input2); aux.push(input3); aux.push(input4); aux.push(input5); aux.push(input6); aux.push(input7); aux.push(input8); aux.push(input9);
+    aux1.push(output0); aux1.push(output1); aux1.push(output2); aux1.push(output3); aux1.push(output4); aux1.push(output5); aux1.push(output6); aux1.push(output7); aux1.push(output8); aux1.push(output9);
+    for (var i = 0; i < 10; i++) {
+        if (aux[i] !== undefined) {
             input.push(aux[i]);
         }
-        if(aux1[i] !== undefined){
+        if (aux1[i] !== undefined) {
             output.push(aux1[i]);
-        }       
+        }
 
     }
-    
-    var ref = firebase.database().ref('Grupos/'+id+'/Tareas');
+
+    var ref = firebase.database().ref('Grupos/' + id + '/Tareas');
     var newPostRef = ref.push();
     newPostRef.set({
-        NombreActividad : nombreActividad,
+        NombreActividad: nombreActividad,
         Problema,
         Ejemplo,
-        Ciclo:ciclo,
+        Ciclo: ciclo,
         input,
         output
     });
- 
-    
 
-res.status(200).json(req.body);
+
+
+    res.status(200).json(req.body);
+});
+
+app.post('/infoTarea', (req, res) => {
+    console.log(req.body);
+    const { id } = req.body;
+    var ref = firebase.database().ref('Grupos/' + id + "/Tareas").orderByKey();
+
+    ref.once('value')
+        .then(function (snapshot) {
+            var Tareas = [];
+            snapshot.forEach(function (childSnapshot) {
+
+                // key will be "ada" the first time and "alan" the second time
+                var key = childSnapshot.key;
+                // childData will be the actual contents of the child
+                var childData = childSnapshot.val();
+                childData.idtarea = key;
+                Tareas.push(childData);
+            });
+            if (Tareas.length === 0) {
+                res.status(200).json("not found");
+            } else {
+                res.status(200).json(Tareas);
+            }
+
+        });
+
 });
 
 app.post('/compilar', (req, res) => {
     var code = {
-        source_code: req.body.code, 
+        source_code: req.body.code,
         language_id: req.body.language_id,
         stdin: "casa"
     }
-    
-    
+
+
     async function compilar() {
         // Compilar
         let response = await fetch('https://api.judge0.com/submissions?base64_encoded=false&wait=false', {
@@ -303,7 +332,7 @@ app.post('/compilar', (req, res) => {
         } else {
             alert("HTTP-Error: " + response.status);
         }
-    
+
         // ver el resultado
         let r;
         while (true) {
@@ -319,12 +348,52 @@ app.post('/compilar', (req, res) => {
         }
         console.log(r);
         res.status(200).json(r);
-        
     }
-    
     compilar();
 });
 
+app.post('/infoGrupos', (req, res) => {
+    var ref = firebase.database().ref('Grupos').orderByKey();
+    ref.once('value')
+        .then(function (snapshot) {
+            var Grupos = [];
+            snapshot.forEach(function (childSnapshot) {
+
+                // key will be "ada" the first time and "alan" the second time
+                var key = childSnapshot.key;
+                // childData will be the actual contents of the child
+                var childData = childSnapshot.val();
+                childData.idgrupo = key;
+                Grupos.push(childData);
+            });
+            if (Grupos.length === 0) {
+                res.status(200).json("not found");
+            } else {
+                res.status(200).json(Grupos);
+            }
+        });
+});
+
+app.post('/addGrupo', (req, res) => {
+    const { nickname, idgrupo } = req.body;
+    var ref1 = firebase.database().ref('Usuario/' + nickname);
+    ref1.once('value')
+        .then(function (snapshot) {
+            var grupos = snapshot.child('Clases').val();
+            if (grupos === null) {
+                grupos = [idgrupo];
+            } else {
+                grupos.push(idgrupo);
+            }
+            var ref2 = firebase.database().ref('Usuario/' + nickname);
+            ref2.update({
+                Clases: grupos
+            });
+
+        });
+    res.status(200).json("done");
+
+});
 
 app.listen(app.get('port'), () => {
     console.log("Server on port ", app.get('port'));

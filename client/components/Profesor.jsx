@@ -62,7 +62,7 @@ class Profesor extends Component {
                 return response.json();
             })
             .then(myJson => this.setState({
-                stage: '0'
+                stage: '2'
             }))
             .catch(error => {
                 console.error('Error:', error)
@@ -91,7 +91,7 @@ class Profesor extends Component {
                 <div>
                     <NavProfesor onchangStage={this.onchangStage}/>
                     <br/>
-                    <ListarTareas crearTareareq={this.crearTareareq}></ListarTareas>
+                    <ListarTareas datosGrupo={this.state} crearTareareq={this.crearTareareq}></ListarTareas>
                 </div>
                    
                 
