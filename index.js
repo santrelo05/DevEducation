@@ -131,7 +131,7 @@ app.post('/login', (req, res) => {
                     lastname: snapshot.child("Apellido").val(),
                     correo: snapshot.child("Correo").val(),
                     password: snapshot.child("Contraseña").val(),
-                    clases : snapshot.child("Clases").val(),
+                    clases: snapshot.child("Clases").val(),
                     stage: '1'
                 }
                 res.status(201).json(myJson);
@@ -353,6 +353,7 @@ app.post('/compilar', (req, res) => {
 });
 
 app.post('/infoGrupos', (req, res) => {
+    const { nickname } = req.body;
     var ref = firebase.database().ref('Grupos').orderByKey();
     ref.once('value')
         .then(function (snapshot) {
@@ -366,11 +367,36 @@ app.post('/infoGrupos', (req, res) => {
                 childData.idgrupo = key;
                 Grupos.push(childData);
             });
-            if (Grupos.length === 0) {
-                res.status(200).json("not found");
-            } else {
-                res.status(200).json(Grupos);
-            }
+            console.log(Grupos[1].idgrupo);
+            var ref1 = firebase.database().ref('Usuario/' + nickname);
+
+            ref1.once('value')
+                .then(function (snapshot) {
+                    var misclases = snapshot.child("Clases").val();
+                    var grupos2 = [];
+                    if (misclases === null || Grupos.length === 0 ) {
+                        res.status(200).json(Grupos);
+                    }
+                    else {
+                        for (var i = 0; i < Grupos.length; i++) {
+                            var cont = 0;
+                            for (var j = 0; j < misclases.length; j++) {
+                                if (Grupos[i].idgrupo === misclases[j]) {
+                                    cont++;
+                                }
+                            }
+                            if (cont === 0) {
+                                grupos2.push(Grupos[i]);
+                            }
+                        }
+                        if (Grupos.length === 0 || grupos2.length === 0) {
+                            res.status(200).json("not found");
+                        } else {
+                            res.status(200).json(grupos2);
+                        }
+                    }
+                });
+
         });
 });
 
@@ -393,6 +419,53 @@ app.post('/addGrupo', (req, res) => {
         });
     res.status(200).json("done");
 
+});
+
+app.post('/infoMisGrupos', (req, res) => {
+    const { nickname } = req.body;
+    function getDatos(claseid) {
+        return new Promise(function (resolve, reject) {
+            var ref = firebase.database().ref('Grupos/' + claseid);
+            ref.once('value')
+                .then(function (snapshot) {
+
+                    var newjson =
+                    {
+                        id: claseid,
+                        correo: snapshot.child("correo").val(),
+                        description: snapshot.child("description").val(),
+                        lastname: snapshot.child("lastname").val(),
+                        name: snapshot.child("name").val(),
+                        nameclass: snapshot.child("nameclass").val(),
+                        nickname: snapshot.child("nickname").val(),
+                    }
+                    resolve(newjson);
+                });
+
+        })
+    }
+
+    async function f1(classarr) {
+        var ss = [];
+        if (classarr === null) {
+            ss = "not found";
+            res.status(200).json(ss);
+        } else {
+
+            for (var i = 0; i < classarr.length; i++) {
+                ss[i] = await getDatos(classarr[i]);
+            }
+
+            res.status(200).json(ss);
+        }
+    }
+
+    var ref1 = firebase.database().ref('Usuario/' + nickname);
+
+    ref1.once('value')
+        .then(function (snapshot) {
+            f1(snapshot.child("Clases").val());
+        });
 });
 
 app.listen(app.get('port'), () => {

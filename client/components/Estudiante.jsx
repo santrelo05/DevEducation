@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import NavEstudiante from './NavEstudiante.jsx';
 import ListarClaseE from './ListarClaseE.jsx';
-
+import ListarMisClasesE from './ListarMisClasesE.jsx';
 
 class Estudiante extends Component {
     constructor() {
@@ -83,7 +83,7 @@ class Estudiante extends Component {
             return(
                 <div>
                     <NavEstudiante onchangStage={this.onchangStage}></NavEstudiante>
-                    <h1>listar mis curos</h1>
+                    <ListarMisClasesE datos={this.props.datos} ></ListarMisClasesE>
                 </div>
             )
         }
