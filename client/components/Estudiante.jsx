@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import NavEstudiante from './NavEstudiante.jsx';
 import ListarClaseE from './ListarClaseE.jsx';
 import ListarMisClasesE from './ListarMisClasesE.jsx';
+import ListarTareasEst from './ListarTareasEst.jsx';
+import SolucionarTarea from './SolucionarTarea.jsx';
 
 class Estudiante extends Component {
     constructor() {
@@ -14,9 +16,11 @@ class Estudiante extends Component {
         this.handleInput = this.handleInput.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.onchangStage = this.onchangStage.bind(this);
+        this.selectedAclass = this.selectedAclass.bind(this);
+        this.selectedTarea = this.selectedTarea.bind(this);
     }
 
-    onchangStage(data){
+    onchangStage(data) {
         this.setState({
             stage: data
         });
@@ -29,6 +33,27 @@ class Estudiante extends Component {
             [name]: value
         });
     }
+
+    selectedAclass(data) {
+        this.setState({
+            id: data.id,
+            correo: data.correo,
+            description: data.description,
+            lastname: data.lastname,
+            name: data.name,
+            nameclass: data.nameclass,
+            nickname: data.nickname,
+            stage: '2'
+        });
+    }
+
+    selectedTarea(data){
+        this.setState({
+            selectedTarea: data,
+            stage: "3"
+        });
+    }
+
     handleSubmit(e) {
         e.preventDefault();
         var patron = /↵/g;
@@ -80,64 +105,57 @@ class Estudiante extends Component {
 
     render() {
         if (this.state.stage === '0') {
-            return(
+            return (
                 <div>
                     <NavEstudiante onchangStage={this.onchangStage}></NavEstudiante>
-                    <ListarMisClasesE datos={this.props.datos} ></ListarMisClasesE>
+                    <ListarMisClasesE datos={this.props.datos} selectedAclass={this.selectedAclass}></ListarMisClasesE>
                 </div>
             )
         }
         if (this.state.stage === '1') {
-            return(
+            return (
                 <div>
                     <NavEstudiante onchangStage={this.onchangStage} ></NavEstudiante>
                     <ListarClaseE datos={this.props.datos}></ListarClaseE>
                 </div>
             )
         }
-        if (this.state.stage === '3') {
 
+        if (this.state.stage === '2') {
+            return (
+                <div>
+                    <NavEstudiante></NavEstudiante>
+                    <br />
+                    <br />
+                    <div className="container d-felx justify-content-center">
+                        <h1>{this.state.nameclass}</h1>
+                    </div>
+                    <br />
+                    <br />
+                    <ListarTareasEst idnum={this.state} selectedTarea={this.selectedTarea}></ListarTareasEst>
+                </div>
+            )
+
+        }
+        if(this.state.stage === "3"){
+            console.log(this.state.selectedTarea);
+            return(
+            <div>
+                <NavEstudiante></NavEstudiante>
+                <br/><br/>
+                <SolucionarTarea selectedtarea={this.state.selectedTarea}></SolucionarTarea>
+            </div>
+            )
+        }
+
+        if (this.state.stage === '4') {
 
             return (
                 <div>
                     <NavEstudiante></NavEstudiante>
                     <br />
                     <br />
-                    <div className='container'>
-                        <div class="jumbotron">
-                            <h1 class="display-3">Manos a la obra!</h1>
-
-                            <form onSubmit={this.handleSubmit}>
-                                <fieldset>
-                                    <div className="form-group">
-                                        <select className="custom-select" name='language' onChange={this.handleInput}>
-                                            <option>Java</option>
-                                            <option>C</option>
-                                            <option>C++</option>
-                                            <option>C#</option>
-                                            <option>Javascript</option>
-                                            <option>PHP</option>
-                                            <option>Python</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label >Code:</label>
-                                        <textarea className="form-control" name='code' rows="12" onChange={this.handleInput} />
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>output</label>
-                                        <h1>{this.state.stdout}</h1>
-                                        <h2>{this.state.compile_output}</h2>
-                                    </div>
-                                    <div className="form-group">
-                                        <button type="submit" className="btn btnAzul btn-lg btn-block">Run</button>
-                                    </div>
-
-                                </fieldset>
-                            </form>
-                        </div>
-                    </div>
+                  
                 </div>
 
             )

@@ -29,7 +29,14 @@ class ListarMisClasesE extends Component {
     }
 
     selectedGrupo(index) {
-        console.log(index);
+        var clase;
+         this.state.misgrupos.map((e, i) => {
+            if(index === i ){
+                clase = e;
+            }
+          });
+        console.log(clase);
+        this.props.selectedAclass(clase);
     }
 
     render() {
