@@ -5,9 +5,88 @@ class SolucionarTarea extends Component {
     constructor() {
         super();
         this.state = {
+            language: 'Java',
+            stdout: "",
+            compile_output: "",
             stage: "0"
         }
+        this.handleInput = this.handleInput.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
+
+    handleInput(e) {
+        const { value, name } = e.target;
+        this.setState({
+            [name]: value
+        });
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+
+        function getDatos(datos, i) {
+            datos.numerico = i;
+            return new Promise(function (resolve, reject) {
+                fetch('/compilar', {
+                    method: 'POST', // or 'PUT'
+                    body: JSON.stringify(datos), // data can be `string` or {object}!
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+
+                })
+                    .then(function (response) {
+                        console.log(response.status);
+                        return response.json();
+                    })
+                    .then(function (myJson) {
+                        resolve(myJson);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error)
+                    });
+            })
+        }
+        async function f1(datos, num) {
+            var ss = [];
+
+            for (var i = 0; i < num; i++) {
+                ss[i] = await getDatos(datos, i);
+            }
+            console.log("este es el resultado")
+            console.log(ss);
+        }
+        var patron = /↵/g;
+        var cadena = this.state.code;
+        cadena = cadena.replace(patron, " ");
+        console.log(this.state);
+        console.log(cadena);
+        var datos = this.state;
+        datos.code = cadena;
+
+        if (datos.language === 'Java') {
+            datos.language_id = 62;
+        }
+        if (datos.language === 'C') {
+            datos.language_id = 50;
+        }
+        if (datos.language === 'C++') {
+            datos.language_id = 54;
+        }
+        if (datos.language === 'C#') {
+            datos.language_id = 51;
+        }
+        if (datos.language === 'Javascript') {
+            datos.language_id = 68;
+        }
+        if (datos.language === 'Python') {
+            datos.language_id = 71;
+        }
+        datos.input = this.state.selectedTarea.input;
+        datos.output = this.state.selectedTarea.output;
+        f1(datos, this.state.selectedTarea.Ciclo);
+    }
+
     render() {
         if (this.state.stage === "0") {
             this.setState({
@@ -19,7 +98,8 @@ class SolucionarTarea extends Component {
             )
         }
         if (this.state.stage === "1") {
-            console.log(this.state.selectedTarea);
+            console.log("mirando estado");
+            console.log(this.state);
             return (
                 <div className='container'>
                     <div class="jumbotron">
@@ -63,8 +143,6 @@ class SolucionarTarea extends Component {
 
                                 <div class="form-group">
                                     <label>output</label>
-                                    <h1>{this.state.stdout}</h1>
-                                    <h2>{this.state.compile_output}</h2>
                                 </div>
                                 <div className="form-group">
                                     <button type="submit" className="btn btnAzul btn-lg btn-block">Run</button>

@@ -310,12 +310,20 @@ app.post('/infoTarea', (req, res) => {
 });
 
 app.post('/compilar', (req, res) => {
-    var code = {
-        source_code: req.body.code,
-        language_id: req.body.language_id,
-        stdin: "casa"
+    if(req.body.input === undefined){
+        var code = {
+            source_code: req.body.code,
+            language_id: req.body.language_id, 
+        }
+    }else{
+        var code = {
+            source_code: req.body.code,
+            language_id: req.body.language_id,
+            stdin: req.body.input[req.body.numerico]
+        }
     }
-
+    
+    
 
     async function compilar() {
         // Compilar
