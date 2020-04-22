@@ -89,7 +89,7 @@ class Estudiante extends Component {
             <div>
                 <NavEstudiante></NavEstudiante>
                 <br/><br/>
-                <SolucionarTarea selectedtarea={this.state.selectedTarea}></SolucionarTarea>
+                <SolucionarTarea selectedtarea={this.state.selectedTarea}  datos={this.props.datos} idnum={this.state}></SolucionarTarea>
             </div>
             )
         }

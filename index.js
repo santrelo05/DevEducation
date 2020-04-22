@@ -310,20 +310,20 @@ app.post('/infoTarea', (req, res) => {
 });
 
 app.post('/compilar', (req, res) => {
-    if(req.body.input === undefined){
+    if (req.body.input === undefined) {
         var code = {
             source_code: req.body.code,
-            language_id: req.body.language_id, 
+            language_id: req.body.language_id,
         }
-    }else{
+    } else {
         var code = {
             source_code: req.body.code,
             language_id: req.body.language_id,
             stdin: req.body.input[req.body.numerico]
         }
     }
-    
-    
+
+
 
     async function compilar() {
         // Compilar
@@ -382,7 +382,7 @@ app.post('/infoGrupos', (req, res) => {
                 .then(function (snapshot) {
                     var misclases = snapshot.child("Clases").val();
                     var grupos2 = [];
-                    if (misclases === null || Grupos.length === 0 ) {
+                    if (misclases === null || Grupos.length === 0) {
                         res.status(200).json(Grupos);
                     }
                     else {
@@ -474,6 +474,83 @@ app.post('/infoMisGrupos', (req, res) => {
         .then(function (snapshot) {
             f1(snapshot.child("Clases").val());
         });
+});
+
+app.post('/guardarCodigo', (req, res) => {
+    const { idclase, idtarea, nickname, language, code } = req.body;
+    var ref = firebase.database().ref('Usuario/' + nickname + '/Codigos');
+    ref.once('value')
+        .then(function (snapshot) {
+            var tt = snapshot.val();
+            var newdata = {};
+            var encontro = false;
+            if (tt === null) {
+                tt=[];
+                newdata.idclase = idclase;
+                newdata.idtarea = idtarea;
+                newdata.language = language;
+                newdata.code = code;
+                tt.push(newdata);
+              
+            }
+            else {
+
+
+                for (var i = 0; i < tt.length; i++) {
+                    if (tt[i].idclase === idclase && tt[i].idtarea === idtarea && tt[i].language === language) {
+                        tt[i].code = code;
+                        encontro = true;
+                    }
+                }
+                if (encontro === false) {
+                    newdata.idclase = idclase;
+                    newdata.idtarea = idtarea;
+                    newdata.language = language;
+                    newdata.code = code;
+                    tt.push(newdata);
+                }
+
+                
+            }
+
+            var ref1 = firebase.database().ref('Usuario/' + nickname);
+                ref1.once('value')
+                    .then(function (snapshot) {
+                        ref1.update({
+                            Codigos: tt
+                        });
+                    });
+           
+        });
+
+    res.status(200).json(req.body);
+
+});
+
+app.post('/buscarCodigo', (req,res) => {
+    const {idtarea,idclase,nickname} = req.body;
+
+    var ref = firebase.database().ref('Usuario/'+nickname);
+    var result =[];
+    ref.once('value')
+       .then(function(snapshot) {
+        var Codigos= snapshot.child("Codigos").val();
+       
+        if(Codigos === null){
+            result.push("");
+            res.status(200).json(result);
+        }
+        else{
+            for(var i = 0 ; i < Codigos.length ; i++){
+                if(Codigos[i].idtarea === idtarea && Codigos[i].idclase === idclase){
+                    result.push(Codigos[i]);
+                }
+            }
+            res.status(200).json(result);
+        }
+        
+        });
+
 });
 
 app.listen(app.get('port'), () => {
