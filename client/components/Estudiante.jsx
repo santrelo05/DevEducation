@@ -17,6 +17,7 @@ class Estudiante extends Component {
         this.onchangStage = this.onchangStage.bind(this);
         this.selectedAclass = this.selectedAclass.bind(this);
         this.selectedTarea = this.selectedTarea.bind(this);
+        this.goback = this.goback.bind(this);
     }
 
     onchangStage(data) {
@@ -47,13 +48,18 @@ class Estudiante extends Component {
             stage: "3"
         });
     }
-
+    goback(data){
+        this.setState({
+            stage: data
+        })
+        
+    }
 
     render() {
         if (this.state.stage === '0') {
             return (
                 <div>
-                    <NavEstudiante onchangStage={this.onchangStage}></NavEstudiante>
+                    <NavEstudiante onchangStage={this.onchangStage} changeit={"0"}></NavEstudiante>
                     <ListarMisClasesE datos={this.props.datos} selectedAclass={this.selectedAclass}></ListarMisClasesE>
                 </div>
             )
@@ -61,7 +67,7 @@ class Estudiante extends Component {
         if (this.state.stage === '1') {
             return (
                 <div>
-                    <NavEstudiante onchangStage={this.onchangStage} ></NavEstudiante>
+                    <NavEstudiante onchangStage={this.onchangStage} changeit={"0"} ></NavEstudiante>
                     <ListarClaseE datos={this.props.datos}></ListarClaseE>
                 </div>
             )
@@ -70,7 +76,7 @@ class Estudiante extends Component {
         if (this.state.stage === '2') {
             return (
                 <div>
-                    <NavEstudiante></NavEstudiante>
+                    <NavEstudiante onchangStage={this.onchangStage} changeit={"3"}></NavEstudiante>
                     <br />
                     <br />
                     <div className="container d-felx justify-content-center">
@@ -78,7 +84,7 @@ class Estudiante extends Component {
                     </div>
                     <br />
                     <br />
-                    <ListarTareasEst idnum={this.state} selectedTarea={this.selectedTarea}></ListarTareasEst>
+                    <ListarTareasEst idnum={this.state} selectedTarea={this.selectedTarea} datos={this.props.datos}></ListarTareasEst>
                 </div>
             )
 
@@ -87,9 +93,9 @@ class Estudiante extends Component {
             console.log(this.state.selectedTarea);
             return(
             <div>
-                <NavEstudiante></NavEstudiante>
+                <NavEstudiante onchangStage={this.onchangStage} changeit={"3"}></NavEstudiante>
                 <br/><br/>
-                <SolucionarTarea selectedtarea={this.state.selectedTarea}  datos={this.props.datos} idnum={this.state}></SolucionarTarea>
+                <SolucionarTarea goback={this.goback} selectedtarea={this.state.selectedTarea}  datos={this.props.datos} idnum={this.state}></SolucionarTarea>
             </div>
             )
         }

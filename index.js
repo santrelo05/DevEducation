@@ -485,13 +485,13 @@ app.post('/guardarCodigo', (req, res) => {
             var newdata = {};
             var encontro = false;
             if (tt === null) {
-                tt=[];
+                tt = [];
                 newdata.idclase = idclase;
                 newdata.idtarea = idtarea;
                 newdata.language = language;
                 newdata.code = code;
                 tt.push(newdata);
-              
+
             }
             else {
 
@@ -510,47 +510,228 @@ app.post('/guardarCodigo', (req, res) => {
                     tt.push(newdata);
                 }
 
-                
+
             }
 
             var ref1 = firebase.database().ref('Usuario/' + nickname);
-                ref1.once('value')
-                    .then(function (snapshot) {
-                        ref1.update({
-                            Codigos: tt
-                        });
+            ref1.once('value')
+                .then(function (snapshot) {
+                    ref1.update({
+                        Codigos: tt
                     });
-           
+                });
+
         });
+    var ref2 = firebase.database().ref('Usuario/' + nickname);
+
+    ref2.once('value')
+        .then(function (snapshot) {
+            var Intento = snapshot.child("Intento").val();
+            var newIntento = [];
+            for (var i = 0; i < Intento.length; i++) {
+                if (Intento[i].idtarea === idtarea && Intento[i].idclase === idclase) {
+
+                } else {
+                    newIntento.push(Intento[i]);
+                }
+            }
+
+            var ref4 = firebase.database().ref('Usuario/' + nickname);
+            ref4.once('value')
+                .then(function (snapshot) {
+                    ref4.update({
+                        Intento: newIntento
+                    });
+                });
+
+        });
+
 
     res.status(200).json(req.body);
 
 });
 
-app.post('/buscarCodigo', (req,res) => {
-    const {idtarea,idclase,nickname} = req.body;
+app.post('/buscarCodigo', (req, res) => {
+    const { idtarea, idclase, nickname } = req.body;
 
-    var ref = firebase.database().ref('Usuario/'+nickname);
-    var result =[];
+    var ref = firebase.database().ref('Usuario/' + nickname);
+    var result = [];
     ref.once('value')
-       .then(function(snapshot) {
-        var Codigos= snapshot.child("Codigos").val();
-       
-        if(Codigos === null){
-            result.push("");
-            res.status(200).json(result);
-        }
-        else{
-            for(var i = 0 ; i < Codigos.length ; i++){
-                if(Codigos[i].idtarea === idtarea && Codigos[i].idclase === idclase){
-                    result.push(Codigos[i]);
-                }
+        .then(function (snapshot) {
+            var Codigos = snapshot.child("Codigos").val();
+
+            if (Codigos === null) {
+                result.push("");
+                res.status(200).json(result);
             }
-            res.status(200).json(result);
-        }
-        
+            else {
+                for (var i = 0; i < Codigos.length; i++) {
+                    if (Codigos[i].idtarea === idtarea && Codigos[i].idclase === idclase) {
+                        result.push(Codigos[i]);
+                    }
+                }
+                res.status(200).json(result);
+            }
+
         });
 
+});
+
+app.post('/tareaAbierta', (req, res) => {
+    const { idtarea, idclase, nickname } = req.body;
+
+
+    var ref = firebase.database().ref('Usuario/' + nickname);
+
+    ref.once('value')
+        .then(function (snapshot) {
+            var Codigos = snapshot.child("Codigos").val();
+            if (Codigos === null) {
+
+                var ref2 = firebase.database().ref('Usuario/' + nickname);
+
+                ref2.once('value')
+                    .then(function (snapshot) {
+                        var Intento = snapshot.child("Intento").val();
+                        if (Intento === null) {
+                            tt = [];
+                            tt.push({
+                                idtarea,
+                                idclase
+                            });
+                            var ref3 = firebase.database().ref('Usuario/' + nickname);
+                            ref3.once('value')
+                                .then(function (snapshot) {
+                                    ref3.update({
+                                        Intento: tt
+                                    });
+                                });
+                            res.status(200).json("tarea no abierta, sin intento");
+                        } else {
+                            var encontrointen = false;
+                            for (var j = 0; j < Intento.length; j++) {
+                                if (Intento[j].idtarea === idtarea && Intento[j].idclase === idclase) {
+                                    encontrointen = true;
+                                }
+                            }
+                            if (encontrointen) {
+                                res.status(200).json("tarea ya abierta, sin codigo,pero con intento");
+                            } else {
+
+                                Intento.push({
+                                    idtarea,
+                                    idclase
+                                });
+                                var ref4 = firebase.database().ref('Usuario/' + nickname);
+                                ref4.once('value')
+                                    .then(function (snapshot) {
+                                        ref4.update({
+                                            Intento: Intento
+                                        });
+                                    });
+                                res.status(200).json("tarea no abierta, sin intento");
+                            }
+                        }
+                    });
+
+            }
+            else {
+                var encontro = false;
+                for (var i = 0; i < Codigos.length; i++) {
+                    if (Codigos[i].idclase === idclase && Codigos[i].idtarea === idtarea) {
+                        encontro = true;
+                    }
+                }
+                if (encontro) {
+                    res.status(200).json("tarea ya abierta, codigo guardado");
+                }
+                else {
+                    var ref2 = firebase.database().ref('Usuario/' + nickname);
+
+                    ref2.once('value')
+                        .then(function (snapshot) {
+                            var Intento = snapshot.child("Intento").val();
+                            if (Intento === null) {
+                                tt = [];
+                                tt.push({
+                                    idtarea,
+                                    idclase
+                                });
+                                var ref3 = firebase.database().ref('Usuario/' + nickname);
+                                ref3.once('value')
+                                    .then(function (snapshot) {
+                                        ref3.update({
+                                            Intento: tt
+                                        });
+                                    });
+                                res.status(200).json("tarea no abierta, sin intento");
+                            } else {
+                                var encontrointen = false;
+                                for (var j = 0; j < Intento.length; j++) {
+                                    if (Intento[j].idtarea === idtarea && Intento[j].idclase === idclase) {
+                                        encontrointen = true;
+                                    }
+                                }
+                                if (encontrointen) {
+                                    res.status(200).json("tarea ya abierta, sin codigo,pero con intento");
+                                } else {
+
+                                    Intento.push({
+                                        idtarea,
+                                        idclase
+                                    });
+                                    var ref4 = firebase.database().ref('Usuario/' + nickname);
+                                    ref4.once('value')
+                                        .then(function (snapshot) {
+                                            ref4.update({
+                                                Intento: Intento
+                                            });
+                                        });
+                                    res.status(200).json("tarea no abierta, sin intento");
+                                }
+                            }
+                        });
+                }
+            }
+        });
+});
+
+app.post('/buscarIntentoCodigo', (req, res) => {
+    const { idclase, nickname, tareas } = req.body;
+
+    var ref = firebase.database().ref('Usuario/' + nickname);
+
+    ref.once('value')
+        .then(function (snapshot) {
+            var Codigos = snapshot.child("Codigos").val();
+            var Intento = snapshot.child("Intento").val();
+            if (Codigos != null) {
+                for (var i = 0; i < tareas.length; i++) {
+                    for (var j = 0; j < Codigos.length; j++) {
+                        if (tareas[i].idtarea === Codigos[j].idtarea && idclase === Codigos[j].idclase) {
+                            tareas[i].red = false;
+                            if (tareas[i].redleng === undefined) {
+                                var t = [];
+                                t.push(Codigos[j].language);
+                                tareas[i].redleng = t;
+                            } else {
+                                tareas[i].redleng.push(Codigos[j].language);
+                            }
+                        }
+                    }
+                }
+            }
+            if (Intento != null) {
+                for (var i = 0; i < tareas.length; i++) {
+                    for (var j = 0; j < Intento.length; j++) {
+                        if (tareas[i].idtarea === Intento[j].idtarea && idclase === Intento[j].idclase) {
+                            tareas[i].red = true;
+                        }
+                    }
+                }
+            }
+            res.status(200).json(tareas);
+        });
 });
 
 app.listen(app.get('port'), () => {

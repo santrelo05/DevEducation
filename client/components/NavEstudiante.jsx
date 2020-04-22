@@ -4,12 +4,14 @@ class NavEstudiante extends Component {
     constructor() {
         super();
         this.state = {
+            stage: "0",
             misclases: 'nav-item active',
             buscarclase: 'nav-item'
         }
+        this.validarDatos = this.validarDatos.bind(this);
     }
 
-    changeStage(e){
+    changeStage(e) {
         if (e === '0') {
             this.setState({
                 misclases: 'nav-item active',
@@ -24,7 +26,20 @@ class NavEstudiante extends Component {
         }
         this.props.onchangStage(e);
     }
-    render (){
+    validarDatos(data) {
+        console.log(data);
+        if(data === "3"){
+            this.props.changeit = "0";
+            this.setState({
+                misclases: 'nav-item',
+                buscarclase: 'nav-item'
+            })
+        }
+    }
+
+    render() {
+
+        this.validarDatos(this.props.changeit);
         return (
             <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
                 <a class="navbar-brand" href="#">DevEduaction</a>
@@ -40,7 +55,7 @@ class NavEstudiante extends Component {
                         <li className={this.state.buscarclase} onClick={this.changeStage.bind(this, '1')}>
                             <a class="nav-link">Buscar Clase</a>
                         </li>
-                        
+
                     </ul>
                     <form class="form-inline my-2 my-lg-0">
                         <input class="form-control mr-sm-2" type="text" placeholder="Search" />
@@ -49,6 +64,7 @@ class NavEstudiante extends Component {
                 </div>
             </nav>
         )
+
     }
 
 }

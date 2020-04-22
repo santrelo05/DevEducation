@@ -16,6 +16,7 @@ class SolucionarTarea extends Component {
         }
         this.handleInput = this.handleInput.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.Back = this.Back.bind(this);
     }
 
     handleInput(e) {
@@ -220,6 +221,9 @@ class SolucionarTarea extends Component {
         }
 
     }
+    Back(){
+        this.props.goback("2");
+    }
 
     render() {
         if (this.state.stage === "0") {
@@ -302,6 +306,7 @@ class SolucionarTarea extends Component {
             return (
                 <div className='container'>
                     <div class="jumbotron">
+                        <button type="button" class="btn btn-danger" onClick={this.Back}> &lt;- </button>
                         <h1 className="display-2">{this.state.selectedTarea.NombreActividad}</h1>
                         <br />
                         <br />
@@ -330,7 +335,6 @@ class SolucionarTarea extends Component {
                                         <option>C</option>
                                         <option>C++</option>
                                         <option>C#</option>
-                                        <option>Javascript</option>
                                         <option>PHP</option>
                                         <option>Python</option>
                                     </select>
