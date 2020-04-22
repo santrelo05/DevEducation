@@ -59,7 +59,7 @@ class ListarMisClasesE extends Component {
                 
                 const grupos = this.state.misgrupos.map((grupo, i) => {
                     return (
-                        <div className="list-group mt-2">
+                        <div className="list-group mt-2 animated zoomIn faster">
                             <a href='#' className="list-group-item list-group-item-action flex-column align-items-start active" onClick={this.selectedGrupo.bind(this, i)}>
                                 <div className="d-flex w-100 justify-content-between">
                                     <h5 className="mb-1">{grupo.nameclass}</h5>

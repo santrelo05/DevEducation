@@ -13,6 +13,7 @@ class SolucionarTarea extends Component {
             ncompilo: false,
             npressbutt: 0,
             nejecfina: 0,
+            buentrabajo: false
         }
         this.handleInput = this.handleInput.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -56,7 +57,8 @@ class SolucionarTarea extends Component {
         this.setState({
             reqcompile: true,
             ncompilo: true,
-            npressbutt: this.state.npressbutt + 1
+            npressbutt: this.state.npressbutt + 1,
+            buentrabajo: false
         })
         function getDatos(datos, i) {
             datos.numerico = i;
@@ -221,7 +223,7 @@ class SolucionarTarea extends Component {
         }
 
     }
-    Back(){
+    Back() {
         this.props.goback("2");
     }
 
@@ -297,14 +299,48 @@ class SolucionarTarea extends Component {
             if (cont === this.state.selectedTarea.Ciclo) {
                 if (this.state.ncompilo && this.state.nejecfina === this.state.npressbutt) {
                     this.guardarcodigo();
+
                     this.setState({
-                        ncompilo: false
+                        ncompilo: false,
+                        buentrabajo: true,
                     })
                 }
 
             }
+            const buentrabajo = (function (data) {
+                if (data) {
+                    return (
+                        <div className="d-flex justify-content-center">
+                            <h1 className="animated infinite bounceIn slow">Genial! Lo Lograste</h1>
+                        </div>)
+                }
+                else {
+                    return (<h1></h1>)
+                }
+            }(this.state.buentrabajo));
+            const error = (function (data,x,y,j) {
+                if (data === undefined) {
+                    return (<h1></h1>)
+                } else {
+                    if (x && y ===  j ){
+                        if (data[0].compile_output === null) {
+                            return (<h1></h1>)
+                        }
+                        else {
+                            return (
+                                <div class="form-group">
+                                    <label for="exampleTextarea">Error al compilar</label>
+                                    <textarea class="form-control" id="exampleTextarea" rows="5" disabled>{data[0].compile_output}</textarea>
+                                </div>
+                            )
+                        }
+                    }else{
+                        return(<h1></h1>)
+                    }
+                }
+            }(this.state.compilar,this.state.ncompilo,this.state.nejecfina,this.state.npressbutt));
             return (
-                <div className='container'>
+                <div className='container animated slideInDown slow'>
                     <div class="jumbotron">
                         <button type="button" class="btn btn-danger" onClick={this.Back}> &lt;- </button>
                         <h1 className="display-2">{this.state.selectedTarea.NombreActividad}</h1>
@@ -355,7 +391,8 @@ class SolucionarTarea extends Component {
                                         {casosdeprueba}
                                     </div>
                                 </div>
-
+                                {buentrabajo}
+                                {error}
                             </fieldset>
                         </form>
                     </div>

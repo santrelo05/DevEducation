@@ -121,7 +121,7 @@ class ListarTareasEst extends Component {
                 const tareas = this.state.tareas.map((tarea, i) => {
                     if (tarea.red === undefined) {
                         return (
-                            <div class="col-4">
+                            <div class="col-4 animated zoomIn faster">
                                 <div class="card text-white my-3">
                                     <h3 class="card-header">{tarea.NombreActividad}</h3>
                                     <div class="card-body">
@@ -138,7 +138,7 @@ class ListarTareasEst extends Component {
                     } else {
                         if (tarea.red) {
                             return (
-                                <div class="col-4">
+                                <div class="col-4 animated zoomIn faster">
                                     <div class="card text-white my-3 bg-danger">
                                         <h3 class="card-header">{tarea.NombreActividad}</h3>
                                         <div class="card-body">
@@ -161,7 +161,7 @@ class ListarTareasEst extends Component {
                                 )
                             });
                             return (
-                                <div class="col-4">
+                                <div class="col-4 animated zoomIn faster">
                                     <div class="card text-white my-3 bg-success">
                                         <h3 class="card-header">{tarea.NombreActividad}</h3>
                                         <div class="card-body">

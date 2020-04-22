@@ -57,7 +57,7 @@ class ListarTareas extends Component {
             } else {
                 const tareas = this.state.tareas.map((tarea, i) => {
                     return (
-                        <div class="col-4">
+                        <div class="col-4 animated zoomIn faster">
                             <div class="card text-white my-3">
                                 <h3 class="card-header">{tarea.NombreActividad}</h3>
                                 <div class="card-body">

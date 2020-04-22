@@ -63,7 +63,7 @@ class MisClasesP extends Component {
                 
                 const clases = this.state.clases.map((clase, i) => {
                     return (
-                        <div className="list-group mt-2">
+                        <div className="list-group mt-2 animated zoomIn faster">
                             <a href='#' className="list-group-item list-group-item-action flex-column align-items-start active" onClick={this.selectedClass.bind(this , i)}>
                                 <div className="d-flex w-100 justify-content-between">
                                     <h5 className="mb-1">{clase.nameclass}</h5>

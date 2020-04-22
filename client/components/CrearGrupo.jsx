@@ -37,7 +37,7 @@ class CrearGrupo extends Component {
         return (
             <div>
                 <br /><br />
-                <div className='container'>
+                <div className='container animated zoomIn faster'>
                     <div class="jumbotron">
                         <h1 class="display-3">Crea tu clase !</h1>
 
